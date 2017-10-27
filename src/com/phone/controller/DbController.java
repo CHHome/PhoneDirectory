@@ -26,8 +26,12 @@ public class DbController {
 			
 		}
 	}
-	public ResultSet selectAll(String order){
-		String sql = "select * from contacts order by "+order;
+	public ResultSet select(String col, String value){
+		String sql;
+		if(col == null)
+		     sql = "select * from contacts order by name";
+		else
+			sql =  "select * from contacts where "+col+"='"+value+"' order by name";
 		try {
 			sqlStm = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
 			ResultSet sqlRet = sqlStm.executeQuery(sql);
@@ -54,6 +58,20 @@ public class DbController {
 		String sql = "update contacts set name='"+name+"',description='"+description+
 				"',mobilenumber='"+mobilenumber+"',homenumber='"+homenumber+
 				"',address='"+address+"' where id="+id;
+		try {
+			sqlStm = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+			sqlStm.executeUpdate(sql);
+			return true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	public Boolean insert(String name, String description, String mobilenumber, String homenumber,String address){
+		String sql = "insert into contacts (name,description,mobilenumber,homenumber,address)"
+				+" values ('"+name+"','"+description+"','"+mobilenumber+"','"+homenumber+"','"+address+"')";
 		try {
 			sqlStm = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
 			sqlStm.executeUpdate(sql);
